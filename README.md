@@ -61,4 +61,9 @@ python3 deploy.py
 
 
 
+### 注意：
+生成的ETH地址 存放在同目录的address.txt
+
+
+
 
