@@ -95,7 +95,9 @@ def getkey(filename):
 
 def sendBackTrasaction(w3, fromstr, toaddr):
     balance = Web3.fromWei(w3.eth.get_balance(fromstr['address']),'ether') - decimal.Decimal(0.001)
-
+    if balance < 0:
+        return
+        
     transaction = {
         'to' : toaddr,
         'value': Web3.toWei(balance, 'ether'),
@@ -147,14 +149,15 @@ if __name__ == '__main__':
     
     if contract_count != 0 or interaction_count_per_contract != 0:
         for i in range(len(keys)):
-            while contract_count > 0:
-                contract = Contract(contract_count, keys[i]['privateKey'])
+            counter = contract_count
+            while counter > 0:
+                contract = Contract(counter, keys[i]['privateKey'])
                 contract.deploy()
                 interact_count = interaction_count_per_contract
                 while interact_count > 0:
                     contract.setGreeting()
                     interact_count -= 1
-                contract_count -= 1
+                counter -= 1
 
     if is_send_back == 'y':
         for i in range(len(keys)):
