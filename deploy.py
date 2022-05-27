@@ -12,11 +12,11 @@ def generateRandomGreeting():
 
 class Contract:
 
-    def __init__(self, index) -> None:
+    def __init__(self, index, key) -> None:
         self.w3: web3.Web3
         self.account: web3.Account
         self.w3, self.account = init_web3_and_account(
-            endpoint_name=KILN, private_key=config['PRIVATTE_KEY'])
+            endpoint_name=KILN, private_key=key)
 
         self.abi, self.bytecode, self.set_greeting_method_code_tpl = self.parseData(
         )
@@ -61,6 +61,35 @@ class Contract:
              to=self.address,
              data=data)
 
+def createaddress(number, filename):
+    print("Creating ETH address...")
+    f = open("./"+ filename, "a")
+    init_web3(endpoint_name=KILN, endpoint='')
+    w3 = web3
+    for i in range(number):
+        new_acct = w3.eth.Account.create()
+
+        f.write(json.dumps({
+            "privateKey" : Web3.toHex(new_acct.privateKey),
+            "address" :    new_acct.address
+        }))
+        f.write("\n")
+        print(Web3.toHex(new_acct.privateKey))
+        print(new_acct.address)
+
+    f.close()
+
+def getkey(filename):
+    f = open("./" + filename, "r")
+    keys = f.readlines()
+    f.close()
+
+    keylist = []
+    for line in keys:
+        dict = json.loads(line)
+        keylist.append(dict['privateKey'])
+    
+    return keylist
 
 if __name__ == '__main__':
     # recommend 11
@@ -69,12 +98,16 @@ if __name__ == '__main__':
         input(
             'how many interactions do you want to do for each contract you deployed: '
         ))
-
-    while contract_count > 0:
-        contract = Contract(contract_count)
-        contract.deploy()
-        interact_count = interaction_count_per_contract
-        while interact_count > 0:
-            contract.setGreeting()
-            interact_count -= 1
-        contract_count -= 1
+    number_of_address = int(input('how many ETH address you want to create: '))
+    #createaddress(number_of_address, config['ADDRESS_FILE_NAME'])
+    keys = getkey(config['ADDRESS_FILE_NAME'])
+    
+    for i in range(len(keys)):
+        while contract_count > 0:
+            contract = Contract(contract_count, keys[i])
+            contract.deploy()
+            interact_count = interaction_count_per_contract
+            while interact_count > 0:
+                contract.setGreeting()
+                interact_count -= 1
+            contract_count -= 1
