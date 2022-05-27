@@ -65,7 +65,7 @@ class Contract:
 def createaddress(number, filename):
     print("Creating ETH address...")
     f = open("./"+ filename, "a")
-    init_web3(endpoint_name=KILN, endpoint='')
+    
     w3 = web3
     for i in range(number):
         new_acct = w3.eth.Account.create()
@@ -116,7 +116,7 @@ def sendOutTransaction(fromstr, toaddr, key, send_value):
         'to' : toaddr,
         'value': Web3.toWei(send_value, 'ether'),
         'gas' : 200000,
-        'nonce': w3.eth.getTransactionCount(fromstr['address']),
+        'nonce': w3.eth.get_transaction_count(fromstr['address']),
         'gasPrice': w3.eth.gasPrice,
         'chainId': 1337802
     }
@@ -133,8 +133,11 @@ if __name__ == '__main__':
         ))
     number_of_address = int(input('how many ETH address you want to create: '))
     number_of_send = int(input('How many ETH you want to send out to child address: '))
-    is_send_back = bool(input("are you willing to send back your ETH from child address to your main address : "))
-    createaddress(number_of_address, config['ADDRESS_FILE_NAME'])
+    is_send_back = str(input("are you willing to send back your ETH from child address to your main address : "))
+    init_web3(endpoint_name=KILN, endpoint='')
+
+    if number_of_address != 0:
+        createaddress(number_of_address, config['ADDRESS_FILE_NAME'])
     keys = getkey(config['ADDRESS_FILE_NAME'])
     mainkey = config['PRIVATTE_KEY']
     mainAddress = config['ADDRESS']
