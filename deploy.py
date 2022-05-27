@@ -122,7 +122,8 @@ def sendOutTransaction(w3, fromstr, toaddr, key, send_value):
     }
 
     signed = w3.eth.account.sign_transaction(transaction, key)
-    w3.eth.sendRawTransaction(signed.rawTransaction)
+    #signed_tx = w3.eth.sendRawTransaction(signed.rawTransaction)
+    send_tx_and_wait_recipt(w3=w3, signed_tx=signed)
 
 if __name__ == '__main__':
     # recommend 11
@@ -149,7 +150,7 @@ if __name__ == '__main__':
     if contract_count != 0 or interaction_count_per_contract != 0:
         for i in range(len(keys)):
             while contract_count > 0:
-                contract = Contract(contract_count, keys[i])
+                contract = Contract(contract_count, keys[i]['privateKey'])
                 contract.deploy()
                 interact_count = interaction_count_per_contract
                 while interact_count > 0:
