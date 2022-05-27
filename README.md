@@ -21,7 +21,8 @@ pip3 install -r requirements.txt
   新建.env文件
 ```
 
-.env。example文件中的 PRIVATE_KEY=xxxx 将xxxx替换为自己的测试钱包私钥 此私钥地址需有足够的ETH用来转账给创建的ETH 地址
+.env.example文件中的 PRIVATE_KEY=xxxx 将xxxx替换为自己的测试钱包私钥 此私钥地址需有足够的ETH用来转账给创建的ETH 地址
+                     
                      ADDRESS=0xxxxx 将0xxxx替换为自己的测试钱包地址  
 ```
 
