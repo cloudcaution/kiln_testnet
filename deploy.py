@@ -1,5 +1,6 @@
 from eth_utils.conversions import to_hex
 import web3
+from web3 import Web3
 from base import *
 from config import config
 import json
@@ -110,13 +111,12 @@ def sendBackTrasaction(fromstr, toaddr):
     w3.eth.sendRawTransaction(signed.rawTransaction)
 
 def sendOutTransaction(w3, fromstr, toaddr, key, send_value):
-    w3 = web3
 
     transaction = {
         'to' : toaddr,
         'value': Web3.toWei(send_value, 'ether'),
         'gas' : 200000,
-        'nonce': w3.eth.get_transaction_count(fromstr['address']),
+        'nonce': w3.eth.getTransactionCount(fromstr),
         'gasPrice': w3.eth.gasPrice,
         'chainId': 1337802
     }
