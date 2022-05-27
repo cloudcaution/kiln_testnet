@@ -93,8 +93,7 @@ def getkey(filename):
     
     return keylist
 
-def sendBackTrasaction(fromstr, toaddr):
-    w3 = web3
+def sendBackTrasaction(w3, fromstr, toaddr):
     balance = Web3.fromWei(w3.eth.get_balance(fromstr['address']),'ether') - decimal.Decimal(0.001)
 
     transaction = {
@@ -108,7 +107,7 @@ def sendBackTrasaction(fromstr, toaddr):
     key = fromstr['privateKey']
 
     signed = w3.eth.account.sign_transaction(transaction, key)
-    w3.eth.sendRawTransaction(signed.rawTransaction)
+    send_tx_and_wait_recipt(w3=w3, signed_tx=signed)
 
 def sendOutTransaction(w3, fromstr, toaddr, key, send_value):
 
@@ -122,7 +121,6 @@ def sendOutTransaction(w3, fromstr, toaddr, key, send_value):
     }
 
     signed = w3.eth.account.sign_transaction(transaction, key)
-    #signed_tx = w3.eth.sendRawTransaction(signed.rawTransaction)
     send_tx_and_wait_recipt(w3=w3, signed_tx=signed)
 
 if __name__ == '__main__':
@@ -134,7 +132,7 @@ if __name__ == '__main__':
         ))
     number_of_address = int(input('how many ETH address you want to create: '))
     number_of_send = int(input('How many ETH you want to send out to child address: '))
-    is_send_back = str(input("are you willing to send back your ETH from child address to your main address : "))
+    is_send_back = str(input("are you willing to send back your ETH from child address to your main address? please type in y/n: "))
     w3 = init_web3(endpoint_name=KILN, endpoint='')
 
     if number_of_address != 0:
@@ -157,3 +155,7 @@ if __name__ == '__main__':
                     contract.setGreeting()
                     interact_count -= 1
                 contract_count -= 1
+
+    if is_send_back == 'y':
+        for i in range(len(keys)):
+            sendBackTrasaction(w3, keys[i], mainAddress)
