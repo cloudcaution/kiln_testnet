@@ -88,7 +88,7 @@ def getkey(filename):
     keylist = []
     for line in keys:
         dict = json.loads(line)
-        keylist.append(dict['privateKey'])
+        keylist.append(dict)
     
     return keylist
 
@@ -109,7 +109,7 @@ def sendBackTrasaction(fromstr, toaddr):
     signed = w3.eth.account.sign_transaction(transaction, key)
     w3.eth.sendRawTransaction(signed.rawTransaction)
 
-def sendOutTransaction(fromstr, toaddr, key, send_value):
+def sendOutTransaction(w3, fromstr, toaddr, key, send_value):
     w3 = web3
 
     transaction = {
@@ -134,7 +134,7 @@ if __name__ == '__main__':
     number_of_address = int(input('how many ETH address you want to create: '))
     number_of_send = int(input('How many ETH you want to send out to child address: '))
     is_send_back = str(input("are you willing to send back your ETH from child address to your main address : "))
-    init_web3(endpoint_name=KILN, endpoint='')
+    w3 = init_web3(endpoint_name=KILN, endpoint='')
 
     if number_of_address != 0:
         createaddress(number_of_address, config['ADDRESS_FILE_NAME'])
@@ -144,7 +144,7 @@ if __name__ == '__main__':
 
     if number_of_send != 0:
         for i in range(len(keys)):
-            sendOutTransaction(mainAddress, keys[i]['address'], mainkey, number_of_send)
+            sendOutTransaction(w3, mainAddress, keys[i]['address'], mainkey, number_of_send)
     
     if contract_count != 0 or interaction_count_per_contract != 0:
         for i in range(len(keys)):

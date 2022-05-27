@@ -50,8 +50,7 @@ endpoints = {
 def init_web3_and_account(endpoint_name: str,
                           endpoint: str = '',
                           private_key: str = '') -> Tuple:
-    return init_web3(endpoint_name=endpoint_name,
-                     endpoint=endpoint), init_account(private_key=private_key)
+    return init_web3(endpoint_name=endpoint_name, endpoint=endpoint), init_account(private_key=private_key)
 
 
 def init_web3(endpoint_name: str, endpoint: str) -> Web3:
