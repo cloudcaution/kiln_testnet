@@ -10,7 +10,7 @@ deploy and interact with your own contracts
 ## 2.下载及配置
 * ###  克隆项目
 ```
-git clone https://github.com/zefzhou/kiln_testnet.git
+git clone https://github.com/cloudcaution/kiln_testnet.git
 ```
 * ### 安装python3依赖包
 ```
