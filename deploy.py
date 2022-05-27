@@ -4,6 +4,7 @@ from base import *
 from config import config
 import json
 import names
+import decimal
 
 
 def generateRandomGreeting():
@@ -91,6 +92,38 @@ def getkey(filename):
     
     return keylist
 
+def sendBackTrasaction(fromstr, toaddr):
+    w3 = web3
+    balance = Web3.fromWei(w3.eth.get_balance(fromstr['address']),'ether') - decimal.Decimal(0.001)
+
+    transaction = {
+        'to' : toaddr,
+        'value': Web3.toWei(balance, 'ether'),
+        'gas' : 200000,
+        'nonce': w3.eth.getTransactionCount(fromstr['address']),
+        'gasPrice': w3.eth.gasPrice,
+        'chainId': 1337802
+    }
+    key = fromstr['privateKey']
+
+    signed = w3.eth.account.sign_transaction(transaction, key)
+    w3.eth.sendRawTransaction(signed.rawTransaction)
+
+def sendOutTransaction(fromstr, toaddr, key, send_value):
+    w3 = web3
+
+    transaction = {
+        'to' : toaddr,
+        'value': Web3.toWei(send_value, 'ether'),
+        'gas' : 200000,
+        'nonce': w3.eth.getTransactionCount(fromstr['address']),
+        'gasPrice': w3.eth.gasPrice,
+        'chainId': 1337802
+    }
+
+    signed = w3.eth.account.sign_transaction(transaction, key)
+    w3.eth.sendRawTransaction(signed.rawTransaction)
+
 if __name__ == '__main__':
     # recommend 11
     contract_count = int(input('how many contracts do you want to deploy: '))
@@ -99,15 +132,24 @@ if __name__ == '__main__':
             'how many interactions do you want to do for each contract you deployed: '
         ))
     number_of_address = int(input('how many ETH address you want to create: '))
-    #createaddress(number_of_address, config['ADDRESS_FILE_NAME'])
+    number_of_send = int(input('How many ETH you want to send out to child address: '))
+    is_send_back = bool(input("are you willing to send back your ETH from child address to your main address : "))
+    createaddress(number_of_address, config['ADDRESS_FILE_NAME'])
     keys = getkey(config['ADDRESS_FILE_NAME'])
+    mainkey = config['PRIVATTE_KEY']
+    mainAddress = config['ADDRESS']
+
+    if number_of_send != 0:
+        for i in range(len(keys)):
+            sendOutTransaction(mainAddress, keys[i]['address'], mainkey, number_of_send)
     
-    for i in range(len(keys)):
-        while contract_count > 0:
-            contract = Contract(contract_count, keys[i])
-            contract.deploy()
-            interact_count = interaction_count_per_contract
-            while interact_count > 0:
-                contract.setGreeting()
-                interact_count -= 1
-            contract_count -= 1
+    if contract_count != 0 or interaction_count_per_contract != 0:
+        for i in range(len(keys)):
+            while contract_count > 0:
+                contract = Contract(contract_count, keys[i])
+                contract.deploy()
+                interact_count = interaction_count_per_contract
+                while interact_count > 0:
+                    contract.setGreeting()
+                    interact_count -= 1
+                contract_count -= 1
