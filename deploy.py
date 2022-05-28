@@ -168,7 +168,7 @@ if __name__ == '__main__':
         for k in range(100):
             for i in range(len(keys)):
                 if len(keys) != 1 and i == len(keys) - 1:
-                    sendOutTransaction(w3, keys[i]['address'], keys[0]['adddress'], keys[i]['privateKey'], 0.001)
+                    sendOutTransaction(w3, keys[i]['address'], keys[0]['address'], keys[i]['privateKey'], 0.001)
                 elif len(keys) == 1:
                     sendOutTransaction(w3, keys[i]['address'], mainAddress, keys[i]['privateKey'], 0.001)
                 else:
