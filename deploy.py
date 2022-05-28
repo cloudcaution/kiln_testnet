@@ -101,11 +101,14 @@ def sendBackTrasaction(w3, fromstr, toaddr):
     transaction = {
         'to' : toaddr,
         'value': Web3.toWei(balance, 'ether'),
-        'gas' : 200000,
         'nonce': w3.eth.getTransactionCount(fromstr['address']),
-        'gasPrice': w3.eth.gasPrice,
         'chainId': 1337802
     }
+
+    transaction['gas'] = w3.eth.estimate_gas(transaction)
+    transaction['gasPrice'] = w3.eth.gasPrice
+    transaction['value'] = transaction['value'] - transaction['gas']*transaction['gasPrice']
+
     key = fromstr['privateKey']
 
     signed = w3.eth.account.sign_transaction(transaction, key)
@@ -116,11 +119,12 @@ def sendOutTransaction(w3, fromstr, toaddr, key, send_value):
     transaction = {
         'to' : toaddr,
         'value': Web3.toWei(send_value, 'ether'),
-        'gas' : 200000,
         'nonce': w3.eth.getTransactionCount(fromstr),
-        'gasPrice': w3.eth.gasPrice,
         'chainId': 1337802
     }
+
+    transaction['gas'] = w3.eth.estimate_gas(transaction)
+    transaction['gasPrice'] = w3.eth.gasPrice
 
     signed = w3.eth.account.sign_transaction(transaction, key)
     send_tx_and_wait_recipt(w3=w3, signed_tx=signed)
