@@ -1,3 +1,11 @@
+## 5/27/2022 更新内容：
+增加 ETH 地址创建 以及给每个地址灌水，
+增加回收水功能， 由于当前gas 费过高， 设定 每个地址留0.1ETH以防归集错误。
+
+## 5/28/2022 更新内容：
+增加 创建的ETH直接的转发 实现刷单转账交易 固定100次
+修复了gas 的波动问题
+
 # kiln_testnet
 deploy and interact with your own contracts
 
@@ -35,13 +43,9 @@ python3 deploy.py
 
 尊重原作者 ZEF ZHOU 感谢他的前期工作， 我在他的基础之上加了一些东西，可以更好的白piao空投，
 
-## 更新内容：
-增加 ETH 地址创建 以及给每个地址灌水，
-增加回收水功能， 由于当前gas 费过高， 设定 每个地址留0.1ETH以防归集错误。
-
 ## 使用说明
 当运行deploy.py后，会需要用户打入相应的值来告诉脚本怎么做相应动作，
-总共按顺序需要输入5个值 分别为：
+总共按顺序需要输入6个值 分别为：
 
 ### how many contracts do you want to deploy:  
 （请输入需要创建多少个合约，原作者建议11个，则输入11 然后回车 输入0则跳过创建
@@ -58,11 +62,17 @@ python3 deploy.py
 ### are you willing to send back your ETH from child address to your main address? please type in y/n: 
 （输入y或者n来确认是否回收打入每个ETH地址的ETH， 然后回车， 输入n跳过
 
+### are you willing to spread out your ETH for 100 times? please type in y/n: 
+（输入y或者n来确认是否进行创建的ETH地址之间互相转账达到刷100次转账交易
+
 
 
 ### 注意：
 生成的ETH地址 存放在同目录的address.txt
-
+对于已经在使用的盆友，如果git repository有更新， 需要再次git pull的时候，为了以防覆盖本地的.env.example文件 可以打如下命令
+```
+git update-index --assume-unchanged .env.example
+```
 
 
 
