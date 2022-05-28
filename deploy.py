@@ -172,7 +172,7 @@ if __name__ == '__main__':
                 elif len(keys) == 1:
                     sendOutTransaction(w3, keys[i]['address'], mainAddress, keys[i]['privateKey'], 0.001)
                 else:
-                    sendOutTransaction(w3, keys[i]['address'], keys[i+1]['adddress'], keys[i]['privateKey'], 0.001)
+                    sendOutTransaction(w3, keys[i]['address'], keys[i+1]['address'], keys[i]['privateKey'], 0.001)
             
 
     if is_send_back == 'y':
