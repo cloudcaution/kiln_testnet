@@ -106,7 +106,7 @@ def sendBackTrasaction(w3, fromstr, toaddr):
     }
 
     transaction['gas'] = w3.eth.estimate_gas(transaction)
-    transaction['gasPrice'] = w3.eth.gasPrice * 2
+    transaction['gasPrice'] = w3.eth.gasPrice * 4
     transaction['value'] = transaction['value'] - transaction['gas']*transaction['gasPrice']
 
     key = fromstr['privateKey']
@@ -124,8 +124,7 @@ def sendOutTransaction(w3, fromstr, toaddr, key, send_value):
     }
 
     transaction['gas'] = w3.eth.estimate_gas(transaction)
-    transaction['gasPrice'] = w3.eth.gasPrice * 2
-    print(transaction['gas'] * transaction['gasPrice'])
+    transaction['gasPrice'] = w3.eth.gasPrice * 4
 
     signed = w3.eth.account.sign_transaction(transaction, key)
     send_tx_and_wait_recipt(w3=w3, signed_tx=signed)

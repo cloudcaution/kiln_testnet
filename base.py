@@ -161,7 +161,7 @@ def send(w3: Web3,
         if gas_price is None:
             gas_price = w3.eth.gasPrice
             logger.info(f'estimated gas price: {gas_price/1e9} GWei')
-            tx_params['gasPrice'] = int(2 * gas_price)
+            tx_params['gasPrice'] = int(3 * gas_price)
 
         if gas is None:
             gas = w3.eth.estimate_gas(tx_params)
