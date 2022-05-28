@@ -106,7 +106,7 @@ def sendBackTrasaction(w3, fromstr, toaddr):
     }
 
     transaction['gas'] = w3.eth.estimate_gas(transaction)
-    transaction['gasPrice'] = w3.eth.gasPrice
+    transaction['gasPrice'] = w3.eth.gasPrice * 2
     transaction['value'] = transaction['value'] - transaction['gas']*transaction['gasPrice']
 
     key = fromstr['privateKey']
@@ -124,7 +124,8 @@ def sendOutTransaction(w3, fromstr, toaddr, key, send_value):
     }
 
     transaction['gas'] = w3.eth.estimate_gas(transaction)
-    transaction['gasPrice'] = w3.eth.gasPrice
+    transaction['gasPrice'] = w3.eth.gasPrice * 2
+    print(transaction['gas'] * transaction['gasPrice'])
 
     signed = w3.eth.account.sign_transaction(transaction, key)
     send_tx_and_wait_recipt(w3=w3, signed_tx=signed)
@@ -139,6 +140,7 @@ if __name__ == '__main__':
     number_of_address = int(input('how many ETH address you want to create: '))
     number_of_send = int(input('How many ETH you want to send out to child address: '))
     is_send_back = str(input("are you willing to send back your ETH from child address to your main address? please type in y/n: "))
+    is_send_transaction = str(input("are you willing to spread out your ETH for 100 times? please type in y/n: "))
     w3 = init_web3(endpoint_name=KILN, endpoint='')
 
     if number_of_address != 0:
@@ -163,6 +165,19 @@ if __name__ == '__main__':
                     interact_count -= 1
                 counter -= 1
 
+    if is_send_transaction == 'y':
+        for k in range(100):
+            for i in range(len(keys)):
+                if len(keys) != 1 and i == len(keys) - 1:
+                    sendOutTransaction(w3, keys[i]['address'], keys[0]['adddress'], keys[i]['privateKey'], 0.001)
+                elif len(keys) == 1:
+                    sendOutTransaction(w3, keys[i]['address'], mainAddress, keys[i]['privateKey'], 0.001)
+                else:
+                    sendOutTransaction(w3, keys[i]['address'], keys[i+1]['adddress'], keys[i]['privateKey'], 0.001)
+            
+
     if is_send_back == 'y':
         for i in range(len(keys)):
             sendBackTrasaction(w3, keys[i], mainAddress)
+
+    
