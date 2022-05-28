@@ -146,29 +146,33 @@ def send(w3: Web3,
          data: str = None,
          val: Wei = Wei(0),
          timeout: int = 120):
-    tx_params = get_default_tx_params(w3=w3,
-                                      account=account,
-                                      chain_id=chain_id,
-                                      to=to,
-                                      data=data,
-                                      val=val,
-                                      gas=gas,
-                                      gas_price=gas_price)
-    if f is not None:
-        tx_params = f.buildTransaction(transaction=tx_params)
+    try: 
+        tx_params = get_default_tx_params(w3=w3,
+                                        account=account,
+                                        chain_id=chain_id,
+                                        to=to,
+                                        data=data,
+                                        val=val,
+                                        gas=gas,
+                                        gas_price=gas_price)
+        if f is not None:
+            tx_params = f.buildTransaction(transaction=tx_params)
 
-    if gas_price is None:
-        gas_price = w3.eth.gasPrice
-        logger.info(f'estimated gas price: {gas_price/1e9} GWei')
-        tx_params['gasPrice'] = int(2 * gas_price)
+        if gas_price is None:
+            gas_price = w3.eth.gasPrice
+            logger.info(f'estimated gas price: {gas_price/1e9} GWei')
+            tx_params['gasPrice'] = int(2 * gas_price)
 
-    if gas is None:
-        gas = w3.eth.estimate_gas(tx_params)
-        logger.info(f'estimated gas limit: {gas}')
-        tx_params['gas'] = gas
+        if gas is None:
+            gas = w3.eth.estimate_gas(tx_params)
+            logger.info(f'estimated gas limit: {gas}')
+            tx_params['gas'] = gas
 
-    signed_tx = sign_tx(w3=w3, account=account, params=tx_params)
-    return send_tx_and_wait_recipt(w3=w3, signed_tx=signed_tx, timeout=timeout)
+        signed_tx = sign_tx(w3=w3, account=account, params=tx_params)
+        return send_tx_and_wait_recipt(w3=w3, signed_tx=signed_tx, timeout=timeout)
+    except:
+        logger.error(f'tx failed: ')
+        return None, False
 
 
 def deadline(t: int):
