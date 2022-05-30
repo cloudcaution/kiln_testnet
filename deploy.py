@@ -167,12 +167,17 @@ if __name__ == '__main__':
     if is_send_transaction == 'y':
         for k in range(100):
             for i in range(len(keys)):
-                if len(keys) != 1 and i == len(keys) - 1:
-                    sendOutTransaction(w3, keys[i]['address'], keys[0]['address'], keys[i]['privateKey'], 0.001)
-                elif len(keys) == 1:
-                    sendOutTransaction(w3, keys[i]['address'], mainAddress, keys[i]['privateKey'], 0.001)
-                else:
-                    sendOutTransaction(w3, keys[i]['address'], keys[i+1]['address'], keys[i]['privateKey'], 0.001)
+                try: 
+                    if len(keys) != 1 and i == len(keys) - 1:
+                        sendOutTransaction(w3, keys[i]['address'], keys[0]['address'], keys[i]['privateKey'], 0.001)
+                    elif len(keys) == 1:
+                        sendOutTransaction(w3, keys[i]['address'], mainAddress, keys[i]['privateKey'], 0.001)
+                    else:
+                        sendOutTransaction(w3, keys[i]['address'], keys[i+1]['address'], keys[i]['privateKey'], 0.001)
+                except:
+                    logger.error(f'tx Time Out, wait for 10 second...')
+                    time.sleep(10)
+                    continue
             
 
     if is_send_back == 'y':
